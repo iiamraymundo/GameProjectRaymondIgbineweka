@@ -29,7 +29,7 @@ namespace ProjectRaymondIgbineweka
             }
         }
 
-        
+        private float movementSpeed = 4.0f;
         public Texture2D SpriteImage { get => spriteImage; set => spriteImage = value; }
 
         public Player(Game1 root, Vector2 position)
@@ -48,7 +48,7 @@ namespace ProjectRaymondIgbineweka
         }
         public void Update(GameTime gameTime)
         {
-
+             
         }
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {

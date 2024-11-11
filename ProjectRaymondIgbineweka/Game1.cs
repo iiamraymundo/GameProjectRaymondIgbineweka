@@ -6,7 +6,7 @@ namespace ProjectRaymondIgbineweka
 {
     public class Game1 : Game
     {
-        private Texture2D PlayerImage;
+        
         private GraphicsDeviceManager _graphics;
         protected SpriteBatch _spriteBatch;
         
@@ -16,6 +16,8 @@ namespace ProjectRaymondIgbineweka
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            Player player = new Player(this, new Vector2(0.0f, 0.0f));
         }
 
         protected override void Initialize()
@@ -28,7 +30,7 @@ namespace ProjectRaymondIgbineweka
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            PlayerImage = Content.Load<Texture2D>("monkey");
+            
 
             // TODO: use this.Content to load your game content here
         }
@@ -39,7 +41,7 @@ namespace ProjectRaymondIgbineweka
                 Exit();
 
             // TODO: Add your update logic here
-
+            
             base.Update(gameTime);
         }
 
@@ -51,8 +53,7 @@ namespace ProjectRaymondIgbineweka
 
             _spriteBatch.Begin();
 
-            Rectangle playerDestinationRect = new Rectangle(0, 0, PlayerImage.Width, PlayerImage.Height);
-            _spriteBatch.Draw(PlayerImage, playerDestinationRect, Color.White);
+           
 
             _spriteBatch.End();
 
