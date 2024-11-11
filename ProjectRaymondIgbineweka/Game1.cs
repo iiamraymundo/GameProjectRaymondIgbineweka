@@ -8,7 +8,7 @@ namespace ProjectRaymondIgbineweka
     {
         private Texture2D PlayerImage;
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        protected SpriteBatch _spriteBatch;
         
 
         public Game1()
