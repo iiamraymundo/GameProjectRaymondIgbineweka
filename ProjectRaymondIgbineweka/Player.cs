@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace ProjectRaymondIgbineweka
 {
@@ -44,11 +45,46 @@ namespace ProjectRaymondIgbineweka
 
         public void LoadContent()
         {
-            this.SpriteImage = root.Content.Load<Texture2D>("Main_Char");
+            // komt nog wel later
+            this.SpriteImage = root.Content.Load<Texture2D>("");
         }
         public void Update(GameTime gameTime)
         {
-             
+            // Get current keyboard state
+            KeyboardState currentKeyboardState = Keyboard.GetState();
+
+            // Handle any movement input
+            HandleInput(currentKeyboardState);
+        }
+        private void HandleInput (KeyboardState currentKeyboardState)
+        {
+            // Get all the key states
+            bool upKeyPressed = currentKeyboardState.IsKeyDown(Keys.Up);
+
+            bool downKeyPressed = currentKeyboardState.IsKeyDown(Keys.Down);
+
+            bool leftKeyPressed = currentKeyboardState.IsKeyDown(Keys.Left);
+
+            bool rightKeyPressed = currentKeyboardState.IsKeyDown(Keys.Right);
+
+            // If Up is pressed, decrease position Y
+            if (upKeyPressed)
+            {
+                position.Y -= movementSpeed;
+            }
+            if (downKeyPressed)
+            {
+                position.Y += movementSpeed;
+            }
+            if (leftKeyPressed)
+            {
+                position.X -= movementSpeed;
+            }
+            if (rightKeyPressed)
+            {
+                position.Y += movementSpeed;
+            }
+
         }
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {

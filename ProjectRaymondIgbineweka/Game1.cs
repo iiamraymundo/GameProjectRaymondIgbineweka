@@ -6,23 +6,26 @@ namespace ProjectRaymondIgbineweka
 {
     public class Game1 : Game
     {
-        
         private GraphicsDeviceManager _graphics;
-        protected SpriteBatch _spriteBatch;
-        
+        private SpriteBatch _spriteBatch;
+
+        private enum GameState { StartScreen, Playing, GameOver}
+        private GameState currentGameState = GameState.StartScreen;
+
+        private SpriteFont startFont;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
-            Player player = new Player(this, new Vector2(0.0f, 0.0f));
         }
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            _graphics.PreferredBackBufferWidth = 800;
+            _graphics.PreferredBackBufferHeight = 600;
+            _graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -30,18 +33,30 @@ namespace ProjectRaymondIgbineweka
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            
 
-            // TODO: use this.Content to load your game content here
+            startFont = Content.Load<SpriteFont>("StartFont"); // Ik maak hier een SpriteFont nadat ik het startscherm heb ingeladen
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            KeyboardState state = Keyboard.GetState();
 
-            // TODO: Add your update logic here
-            
+            switch (currentGameState)
+            {
+                case GameState.StartScreen:
+                    if (state.IsKeyDown(Keys.Enter))
+                    {
+                        currentGameState = GameState.Playing;
+                    }
+                    break;
+
+                case GameState.Playing:
+                    break;
+
+                case GameState.GameOver:
+                    break;
+            }
+
             base.Update(gameTime);
         }
 
@@ -49,15 +64,25 @@ namespace ProjectRaymondIgbineweka
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
-
             _spriteBatch.Begin();
 
-           
+            switch (currentGameState)
+            {
+                case GameState.StartScreen:
+                    _spriteBatch.DrawString(startFont, "Press ENTER to start", new Vector2(300, 250), Color.White);
+                    break;
+
+                case GameState.Playing:
+                    break;
+
+                case GameState.GameOver:
+                    break;
+            }
 
             _spriteBatch.End();
 
             base.Draw(gameTime);
         }
+
     }
 }
