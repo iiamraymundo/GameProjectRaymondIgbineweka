@@ -18,6 +18,8 @@ namespace ProjectRaymondIgbineweka
         private Vector2 playerPosition; // Positie van speler
         private float playerSpeed = 200f; // Snelheid van speler
 
+        private Enemy enemy; //1 vijand, Ik ga hiervan een lijst maken wanneer ik meerdere vijanden heb
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -51,6 +53,19 @@ namespace ProjectRaymondIgbineweka
 
             // Startpositie van de speler
             playerPosition = new Vector2(375, 500); // Midden-onderaan het scherm
+            
+            // Vijand aanmaken als een gekleurde rechthoek
+            Texture2D enemyTexture = new Texture2D(GraphicsDevice,50,50);
+            Color[] enemyData = new Color[50 * 50];
+            for (int i = 0; i < enemyData.Length; i++)
+            {
+                enemyData[i] = Color.Green;                
+            }
+            enemyTexture.SetData(enemyData);
+
+            // Geef de tekstuur door aan de vijand
+            enemy = new Enemy(enemyTexture, new Vector2(375, 50), 100f);
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -67,6 +82,7 @@ namespace ProjectRaymondIgbineweka
                     break;
 
                 case GameState.Playing:
+                    Vector2 movement = Vector2.Zero;
                     //Spelerbewegingen
                     if (state.IsKeyDown(Keys.Left)) //Naar links bewegen
                         playerPosition.X -= playerSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -80,11 +96,30 @@ namespace ProjectRaymondIgbineweka
                     if (state.IsKeyDown(Keys.Down)) // Naar beneden bewegen
                         playerPosition.Y += playerSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                    playerPosition.X = MathHelper.Clamp(playerPosition.X, 0, _graphics.PreferredBackBufferWidth - playerTexture.Width);
-                    playerPosition.Y = MathHelper.Clamp(playerPosition.Y, 0, _graphics.PreferredBackBufferHeight - playerTexture.Height);
+                    if (movement.Length() > 0)
+                    {
+                        movement.Normalize();
+                        playerPosition += movement * playerSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    }
+
+                    // Update vijand (laat hem naar de speler bewegen)
+                    enemy.Update(gameTime, playerPosition);
+
+                    // Controleer op Game Over (bijvoorbeeld: botsing met vijand)
+                    if (Vector2.Distance(playerPosition, enemy.Position) < 50)
+                    {
+                        currentGameState = GameState.GameOver;
+                    }
+
                     break;
 
                 case GameState.GameOver:
+                    // Ga terug naar startscherm als speler op Enter drukt
+                    if (state.IsKeyDown(Keys.Enter))
+                    {
+                        currentGameState = GameState.StartScreen;
+                        playerPosition = new Vector2(400, 300); // Reset spelerpositie
+                    }
                     break;
             }
 
@@ -93,6 +128,7 @@ namespace ProjectRaymondIgbineweka
 
         protected override void Draw(GameTime gameTime)
         {
+            string startText = "Press Enter to Start!";
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
@@ -100,15 +136,33 @@ namespace ProjectRaymondIgbineweka
             switch (currentGameState)
             {
                 case GameState.StartScreen:
-                    _spriteBatch.DrawString(startFont, "Press ENTER to start", new Vector2(300, 250), Color.White);
+                    _spriteBatch.DrawString(startFont, startText, new Vector2(300, 250), Color.White);
+                    Vector2 startTextSize = startFont.MeasureString(startText);
+                    _spriteBatch.DrawString(
+                        startFont,
+                        startText,
+                        new Vector2((_graphics.PreferredBackBufferWidth - startTextSize.X) / 2,
+                                    (_graphics.PreferredBackBufferHeight - startTextSize.Y) / 2),
+                        Color.White);
                     break;
 
                 case GameState.Playing:
                     // Speler tekenen
                     _spriteBatch.Draw(playerTexture, playerPosition, Color.White);
+
+                    // Vijand tekenen
+                    enemy.Draw(_spriteBatch);
                     break;
 
                 case GameState.GameOver:
+                    string gameOverText = "Game Over! Press Enter to Restart.";
+                    Vector2 gameOverTextSize = startFont.MeasureString(gameOverText);
+                    _spriteBatch.DrawString(
+                        startFont,
+                        gameOverText,
+                        new Vector2((_graphics.PreferredBackBufferWidth - gameOverTextSize.X) / 2,
+                                    (_graphics.PreferredBackBufferHeight - gameOverTextSize.Y) / 2),
+                        Color.Red);
                     break;
             }
 
