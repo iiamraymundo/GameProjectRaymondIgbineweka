@@ -67,6 +67,21 @@ namespace ProjectRaymondIgbineweka
                     break;
 
                 case GameState.Playing:
+                    //Spelerbewegingen
+                    if (state.IsKeyDown(Keys.Left)) //Naar links bewegen
+                        playerPosition.X -= playerSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    if (state.IsKeyDown(Keys.Right)) //Naar rechts bewegen
+                        playerPosition.X += playerSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    if (state.IsKeyDown(Keys.Up)) // Naar boven bewegen
+                        playerPosition.Y -= playerSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    if (state.IsKeyDown(Keys.Down)) // Naar beneden bewegen
+                        playerPosition.Y += playerSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    playerPosition.X = MathHelper.Clamp(playerPosition.X, 0, _graphics.PreferredBackBufferWidth - playerTexture.Width);
+                    playerPosition.Y = MathHelper.Clamp(playerPosition.Y, 0, _graphics.PreferredBackBufferHeight - playerTexture.Height);
                     break;
 
                 case GameState.GameOver:
@@ -89,6 +104,8 @@ namespace ProjectRaymondIgbineweka
                     break;
 
                 case GameState.Playing:
+                    // Speler tekenen
+                    _spriteBatch.Draw(playerTexture, playerPosition, Color.White);
                     break;
 
                 case GameState.GameOver:
