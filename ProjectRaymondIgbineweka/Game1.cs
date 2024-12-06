@@ -89,6 +89,12 @@ namespace ProjectRaymondIgbineweka
                 coins.Add(new Coin(playerTexture, new Vector2(100 * i + 50, 100))); // Pas locatie aan
             }
 
+
+            enemies = new List<Enemy>
+            {
+                new Enemy(enemyTexture,new Vector2(300,200),90f),
+                new Enemy(enemyTexture,new Vector2(500,150),90f)
+            };
         }
 
         protected override void Update(GameTime gameTime)
