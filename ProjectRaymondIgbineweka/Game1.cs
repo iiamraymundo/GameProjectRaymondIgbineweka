@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace ProjectRaymondIgbineweka
 {
@@ -19,6 +20,18 @@ namespace ProjectRaymondIgbineweka
         private float playerSpeed = 200f; // Snelheid van speler
 
         private Enemy enemy; //1 vijand, Ik ga hiervan een lijst maken wanneer ik meerdere vijanden heb
+
+        private EnemyTypeTwo enemyTypeTwo;
+        private List<Coin> coins;
+        private int score = 0;
+        private int playerLives = 3;
+        private bool isPlayerInvincible = false;
+        private float invincibilityTimer = 0f;
+        private float invincibilityDuration = 2f; // Onschendbaarheid duurt 2 seconden
+
+        private List<Enemy> enemies; // Bevat alle vijanden in het spel
+
+
 
         public Game1()
         {
@@ -65,6 +78,16 @@ namespace ProjectRaymondIgbineweka
 
             // Geef de tekstuur door aan de vijand
             enemy = new Enemy(enemyTexture, new Vector2(375, 50), 100f);
+
+
+            enemyTypeTwo = new EnemyTypeTwo(enemyTexture, new Vector2(700, 300));
+
+            // Coins aanmaken
+            coins = new List<Coin>();
+            for (int i = 0; i < 5; i++) // 5 coins
+            {
+                coins.Add(new Coin(playerTexture, new Vector2(100 * i + 50, 100))); // Pas locatie aan
+            }
 
         }
 
@@ -143,13 +166,54 @@ namespace ProjectRaymondIgbineweka
                 playerPosition.Y = MathHelper.Clamp(playerPosition.Y, 0, _graphics.PreferredBackBufferHeight - playerTexture.Height);
             }
 
-            // Update vijand
+            if (isPlayerInvincible)
+            {
+                invincibilityTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (invincibilityTimer >= invincibilityDuration)
+                {
+                    isPlayerInvincible = false;
+                    invincibilityTimer = 0f;
+                }
+            }
+
+            // Update vijand Type 1
             enemy.Update(gameTime, playerPosition);
+
+            // Vijand Type 2
+            enemyTypeTwo.Update(gameTime);
+
 
             // Controleer op Game Over (bijvoorbeeld: botsing met vijand)
             if (Vector2.Distance(playerPosition, enemy.Position) < 50)
             {
                 currentGameState = GameState.GameOver;
+            }
+
+            // Botsing met vijanden
+            if (!isPlayerInvincible && (Vector2.Distance(playerPosition, enemy.Position) < 50 || Vector2.Distance(playerPosition, enemyTypeTwo.Position) < 50))
+            {
+                playerLives--;
+                isPlayerInvincible = true;
+
+                if (playerLives <= 0)
+                {
+                    currentGameState = GameState.GameOver;
+                }
+            }
+
+            // Check voor coins
+            foreach (var coin in coins)
+            {
+                if (!coin.IsCollected && Vector2.Distance(playerPosition, coin.Position) < 30)
+                {
+                    coin.Collect();
+                    score += 10;
+
+                    if (score >= 50) // Victory bij score 50
+                    {
+                        currentGameState = GameState.GameOver;
+                    }
+                }
             }
         }
 
@@ -180,6 +244,17 @@ namespace ProjectRaymondIgbineweka
 
             // Teken vijand
             enemy.Draw(_spriteBatch);
+
+            foreach (var coin in coins)
+            {
+                coin.Draw(_spriteBatch);
+            }
+
+            _spriteBatch.DrawString(startFont, $"Score: {score}", new Vector2(10, 10), Color.White);
+            _spriteBatch.DrawString(startFont, $"Lives: {playerLives}", new Vector2(10, 40), Color.White);
+
+            // Vijand Type 2
+            enemyTypeTwo.Draw(_spriteBatch);
         }
         private void DrawGameOver()
         {
