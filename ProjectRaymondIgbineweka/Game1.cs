@@ -75,51 +75,15 @@ namespace ProjectRaymondIgbineweka
             switch (currentGameState)
             {
                 case GameState.StartScreen:
-                    if (state.IsKeyDown(Keys.Enter))
-                    {
-                        currentGameState = GameState.Playing;
-                    }
+                    UpdateStartScreen(state);
                     break;
 
                 case GameState.Playing:
-                    Vector2 movement = Vector2.Zero;
-                    //Spelerbewegingen
-                    if (state.IsKeyDown(Keys.Left)) //Naar links bewegen
-                        playerPosition.X -= playerSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-                    if (state.IsKeyDown(Keys.Right)) //Naar rechts bewegen
-                        playerPosition.X += playerSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-                    if (state.IsKeyDown(Keys.Up)) // Naar boven bewegen
-                        playerPosition.Y -= playerSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-                    if (state.IsKeyDown(Keys.Down)) // Naar beneden bewegen
-                        playerPosition.Y += playerSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-                    if (movement.Length() > 0)
-                    {
-                        movement.Normalize();
-                        playerPosition += movement * playerSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    }
-
-                    // Update vijand (laat hem naar de speler bewegen)
-                    enemy.Update(gameTime, playerPosition);
-
-                    // Controleer op Game Over (bijvoorbeeld: botsing met vijand)
-                    if (Vector2.Distance(playerPosition, enemy.Position) < 50)
-                    {
-                        currentGameState = GameState.GameOver;
-                    }
-
+                    UpdatePlaying(gameTime,state);
                     break;
 
                 case GameState.GameOver:
-                    // Ga terug naar startscherm als speler op Enter drukt
-                    if (state.IsKeyDown(Keys.Enter))
-                    {
-                        currentGameState = GameState.StartScreen;
-                        playerPosition = new Vector2(400, 300); // Reset spelerpositie
-                    }
+                    UpdateGameOver(state);
                     break;
             }
 
@@ -127,8 +91,7 @@ namespace ProjectRaymondIgbineweka
         }
 
         protected override void Draw(GameTime gameTime)
-        {
-            string startText = "Press Enter to Start!";
+        {            
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
@@ -136,33 +99,15 @@ namespace ProjectRaymondIgbineweka
             switch (currentGameState)
             {
                 case GameState.StartScreen:
-                    _spriteBatch.DrawString(startFont, startText, new Vector2(300, 250), Color.White);
-                    Vector2 startTextSize = startFont.MeasureString(startText);
-                    _spriteBatch.DrawString(
-                        startFont,
-                        startText,
-                        new Vector2((_graphics.PreferredBackBufferWidth - startTextSize.X) / 2,
-                                    (_graphics.PreferredBackBufferHeight - startTextSize.Y) / 2),
-                        Color.White);
+                    DrawStartScreen();
                     break;
 
                 case GameState.Playing:
-                    // Speler tekenen
-                    _spriteBatch.Draw(playerTexture, playerPosition, Color.White);
-
-                    // Vijand tekenen
-                    enemy.Draw(_spriteBatch);
+                    DrawPlaying();
                     break;
 
                 case GameState.GameOver:
-                    string gameOverText = "Game Over! Press Enter to Restart.";
-                    Vector2 gameOverTextSize = startFont.MeasureString(gameOverText);
-                    _spriteBatch.DrawString(
-                        startFont,
-                        gameOverText,
-                        new Vector2((_graphics.PreferredBackBufferWidth - gameOverTextSize.X) / 2,
-                                    (_graphics.PreferredBackBufferHeight - gameOverTextSize.Y) / 2),
-                        Color.Red);
+                    DrawGameOver();
                     break;
             }
 
@@ -170,6 +115,84 @@ namespace ProjectRaymondIgbineweka
 
             base.Draw(gameTime);
         }
+
+        private void UpdateStartScreen(KeyboardState state)
+        {
+            if (state.IsKeyDown(Keys.Enter))
+            {
+                currentGameState = GameState.Playing;
+            }
+        }
+
+        private void UpdatePlaying(GameTime gameTime, KeyboardState keyboardState)
+        {
+            // Update spelerpositie op basis van toetsenbordinvoer
+            Vector2 movement = Vector2.Zero;
+            if (keyboardState.IsKeyDown(Keys.Up)) movement.Y -= 1;
+            if (keyboardState.IsKeyDown(Keys.Down)) movement.Y += 1;
+            if (keyboardState.IsKeyDown(Keys.Left)) movement.X -= 1;
+            if (keyboardState.IsKeyDown(Keys.Right)) movement.X += 1;
+
+            if (movement.Length() > 0)
+            {
+                movement.Normalize();
+                playerPosition += movement * playerSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                // Limiteer de spelerpositie binnen de schermgrenzen
+                playerPosition.X = MathHelper.Clamp(playerPosition.X, 0, _graphics.PreferredBackBufferWidth - playerTexture.Width);
+                playerPosition.Y = MathHelper.Clamp(playerPosition.Y, 0, _graphics.PreferredBackBufferHeight - playerTexture.Height);
+            }
+
+            // Update vijand
+            enemy.Update(gameTime, playerPosition);
+
+            // Controleer op Game Over (bijvoorbeeld: botsing met vijand)
+            if (Vector2.Distance(playerPosition, enemy.Position) < 50)
+            {
+                currentGameState = GameState.GameOver;
+            }
+        }
+
+        private void UpdateGameOver(KeyboardState state)
+        {
+            if (state.IsKeyDown(Keys.Enter))
+            {
+                currentGameState = GameState.StartScreen;
+                playerPosition = new Vector2(400, 300); // Reset spelerpositie
+            }
+        }
+
+        private void DrawStartScreen()
+        {
+            string startText = "Press Enter to Start!";
+            Vector2 startTextSize = startFont.MeasureString(startText);
+            _spriteBatch.DrawString(
+                startFont,
+                startText,
+                new Vector2((_graphics.PreferredBackBufferWidth - startTextSize.X) / 2,
+                            (_graphics.PreferredBackBufferHeight - startTextSize.Y) / 2),
+                Color.White);
+        }
+        private void DrawPlaying()
+        {
+            // Teken speler
+            _spriteBatch.Draw(playerTexture, playerPosition, Color.White);
+
+            // Teken vijand
+            enemy.Draw(_spriteBatch);
+        }
+        private void DrawGameOver()
+        {
+            string gameOverText = "Game Over! Press Enter to Restart.";
+            Vector2 gameOverTextSize = startFont.MeasureString(gameOverText);
+            _spriteBatch.DrawString(
+                startFont,
+                gameOverText,
+                new Vector2((_graphics.PreferredBackBufferWidth - gameOverTextSize.X) / 2,
+                            (_graphics.PreferredBackBufferHeight - gameOverTextSize.Y) / 2),
+                Color.Red);
+        }
+
 
     }
 }
