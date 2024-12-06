@@ -31,6 +31,8 @@ namespace ProjectRaymondIgbineweka
 
         private List<Enemy> enemies; // Bevat alle vijanden in het spel
 
+        private FinalBoss finalBoss;
+
 
 
         public Game1()
@@ -95,6 +97,9 @@ namespace ProjectRaymondIgbineweka
                 new Enemy(enemyTexture,new Vector2(300,200),90f),
                 new Enemy(enemyTexture,new Vector2(500,150),90f)
             };
+
+            finalBoss = new FinalBoss(enemyTexture, new Vector2(600, 200));
+
         }
 
         protected override void Update(GameTime gameTime)

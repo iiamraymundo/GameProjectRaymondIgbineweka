@@ -1,10 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectRaymondIgbineweka
 {
@@ -37,6 +32,16 @@ namespace ProjectRaymondIgbineweka
             return currentHealth <= 0;
         }
 
-        
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            //eindbaas tekenen
+            spriteBatch.Draw(texture, Position, Color.Purple);
+
+            // Teken de HP-balk
+            var healthBarWidth = 100;
+            var healthBarHeight = 10;
+            var healthPercentage = (float)currentHealth / maxHealth;
+            spriteBatch.Draw(texture, new Rectangle((int)Position.X, (int)Position.Y - 20, (int)(healthBarWidth * healthPercentage), healthBarHeight), Color.Red);
+        }
     }
 }
