@@ -16,7 +16,7 @@ namespace ProjectRaymondIgbineweka
         private SpriteFont startFont;
 
         private Texture2D playerTexture; // Sprite van speler
-        private Vector2 playerPosition; // Positie van speler
+        private Vector2 playerPosition; // Positie van speler, doe dit straks weg
         private float playerSpeed = 200f; // Snelheid van speler
 
         private Enemy enemy; //1 vijand, Ik ga hiervan een lijst maken wanneer ik meerdere vijanden heb
@@ -150,7 +150,7 @@ namespace ProjectRaymondIgbineweka
             base.Draw(gameTime);
         }
 
-        private void UpdateStartScreen(KeyboardState state)
+        private void UpdateStartScreen(KeyboardState state) // dit ook straks weg
         {
             if (state.IsKeyDown(Keys.Enter))
             {
@@ -228,7 +228,7 @@ namespace ProjectRaymondIgbineweka
             }
         }
 
-        private void UpdateGameOver(KeyboardState state)
+        private void UpdateGameOver(KeyboardState state) // doe dit straks weg, staat in GameStateManager
         {
             if (state.IsKeyDown(Keys.Enter))
             {
