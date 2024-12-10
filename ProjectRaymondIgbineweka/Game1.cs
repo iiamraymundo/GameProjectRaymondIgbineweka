@@ -8,7 +8,7 @@ namespace ProjectRaymondIgbineweka
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private SpriteBatch _spriteBatch; 
 
         private enum GameState { StartScreen, Playing, GameOver}
         private GameState currentGameState = GameState.StartScreen;

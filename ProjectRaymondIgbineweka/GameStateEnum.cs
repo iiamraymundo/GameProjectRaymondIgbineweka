@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace ProjectRaymondIgbineweka
 {
-    internal class GameState
+    internal class GameStateEnum
     {
+    }
+    public enum GameState
+    {
+        StartScreen,
+        Playing,
+        GameOver
     }
 }
