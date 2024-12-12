@@ -32,6 +32,29 @@ namespace ProjectRaymondIgbineweka.Manager_s
             {
                 Enemy enemy = enemies[i];
                 enemy.Update(gameTime, playerManager.Position);
+
+                // Als er botsingen zijn tussen spelers en vijanden
+
+                if (Vector2.Distance(playerManager.Position, enemy.Position) < 50)
+                {
+                    if (playerManager.IsjumpingOn(enemy))
+                    {
+                        enemies.RemoveAt(i); // Vijand is verslagen
+                    }
+                    else
+                    {
+                        playerManager.TakeDamage();
+                    }
+                }
+            }
+
+            // Update coins: check of de speler een coin heeft opgepakt
+            for (int i = coins.Count - 1; i >= 0; i--)
+            {
+                if (Vector2.Distance(playerManager.Position, coins[i] < 30){
+                    coins.RemoveAt(i); //verwijder coin
+                    
+                }
             }
         }
 
