@@ -1,12 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ProjectRaymondIgbineweka.Manager_s;
 using System.Collections.Generic;
 
 namespace ProjectRaymondIgbineweka
 {
     public class Game1 : Game
     {
+        //deze 2 zeker behouden
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch; 
 
@@ -32,6 +34,11 @@ namespace ProjectRaymondIgbineweka
         private List<Enemy> enemies; // Bevat alle vijanden in het spel
 
         private FinalBoss finalBoss;
+
+        //nieuwe instanties
+        private GameStateManager gameStateManager;
+        private PlayerManager playerManager;
+        private LevelManager levelManager;
 
 
 

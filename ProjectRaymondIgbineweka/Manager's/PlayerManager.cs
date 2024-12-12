@@ -10,6 +10,6 @@ namespace ProjectRaymondIgbineweka.Manager_s
 {
     internal class PlayerManager
     {
-
+        public Vector2 Position { get; private set; }
     }
 }

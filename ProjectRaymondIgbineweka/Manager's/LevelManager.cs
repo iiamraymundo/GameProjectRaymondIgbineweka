@@ -1,13 +1,40 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ProjectRaymondIgbineweka.Manager_s
 {
     internal class LevelManager
     {
+        private List<Enemy> enemies;
+        private List<Vector2> coins;
+
+        public LevelManager(Texture2D enemyTexture, Texture2D coinTexture)
+        {
+            // Initialiseer vijanden en coins
+            enemies = new List<Enemy>
+            {
+                new Enemy(enemyTexture, new Vector2(300,200), 50f), // 3de element (speed) nog aanpassen indien nodig
+                new Enemy(enemyTexture, new Vector2(500,150), 50f)
+            };
+
+            coins = new List<Vector2>
+            {
+                new Vector2(400,200),
+                new Vector2(600,150)
+            };
+        }
+
+        public void Update(GameTime gameTime, PlayerManager playerManager)
+        {
+            for (int i = enemies.Count; i >= 0; i--)
+            {
+                Enemy enemy = enemies[i];
+                enemy.Update(gameTime, playerManager.Position);
+            }
+        }
+
 
     }
 }
