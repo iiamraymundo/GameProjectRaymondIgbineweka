@@ -13,8 +13,20 @@ namespace ProjectRaymondIgbineweka.Manager_s
         public Vector2 Position { get; private set; }
         private Texture2D playerTexture;
         private int lives;
+        private int score;
 
+        public PlayerManager(Texture2D texture)
+        {
+            playerTexture = texture;
+            Position = new Vector2(100, 300);
+            lives = 3;
+            score = 0;
+        }
 
+        public void Update(GameTime gameTime)
+        {
+
+        }
 
         public bool IsjumpingOn(Enemy enemy)
         {
@@ -28,6 +40,11 @@ namespace ProjectRaymondIgbineweka.Manager_s
             {
                 // Speler is dood
             }
+        }
+
+        public void AddScore(int amount)
+        {
+            score += amount;
         }
     }
 }

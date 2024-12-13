@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Net.Mime;
 
 
 namespace ProjectRaymondIgbineweka.Manager_s
@@ -9,6 +11,7 @@ namespace ProjectRaymondIgbineweka.Manager_s
     {
         private List<Enemy> enemies;
         private List<Vector2> coins;
+        private Texture2D coinTexture;
 
         public LevelManager(Texture2D enemyTexture, Texture2D coinTexture)
         {
@@ -24,6 +27,7 @@ namespace ProjectRaymondIgbineweka.Manager_s
                 new Vector2(400,200),
                 new Vector2(600,150)
             };
+            this.coinTexture = coinTexture;
         }
 
         public void Update(GameTime gameTime, PlayerManager playerManager)
@@ -51,13 +55,26 @@ namespace ProjectRaymondIgbineweka.Manager_s
             // Update coins: check of de speler een coin heeft opgepakt
             for (int i = coins.Count - 1; i >= 0; i--)
             {
-                if (Vector2.Distance(playerManager.Position, coins[i] < 30){
+                if (Vector2.Distance(playerManager.Position, coins[i]) < 30){
                     coins.RemoveAt(i); //verwijder coin
+
+                    playerManager.AddScore(10); //voeg punten toe
                     
                 }
             }
         }
 
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            foreach (var enemy in enemies)
+            {
+                enemy.Draw(spriteBatch);
+            }
 
+            foreach (var coin in coins)
+            {
+                spriteBatch.Draw(coinTexture, coin, Color.White); // Gebruik de coin-texture
+            }
+        }
     }
 }
