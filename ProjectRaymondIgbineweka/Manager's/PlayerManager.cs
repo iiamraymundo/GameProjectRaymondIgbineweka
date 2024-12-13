@@ -17,7 +17,14 @@ namespace ProjectRaymondIgbineweka.Manager_s
         private int score;
 
         private Vector2 velocity;
+        private bool isJumping;
+        private float jumpSpeed = -10f;
+        private float gravity = 0.5f;
 
+        private bool isInvincible = false; // invincibility na schade
+        private double invincibleTimer = 0; // tijd dat je invincible bent
+
+       
         public PlayerManager(Texture2D texture)
         {
             playerTexture = texture;
@@ -42,7 +49,59 @@ namespace ProjectRaymondIgbineweka.Manager_s
             {
                 velocity.X = 0; // Stop met bewegen
             }
+
+            // Om te springen
+            if (keyboardState.IsKeyDown(Keys.Space) && !isJumping)
+            {
+                isJumping = true;
+                velocity.Y = jumpSpeed; // Geef een sprong omhoog
+            }
+
+            //Gravitie configuratie
+            if (isJumping)
+            {
+                velocity.Y += gravity;
+            }
+
+            Position += velocity;
+
+            // Simuleer grond (zodat speler niet blijft vallen)
+            
+            
+            if (Position.Y >= 300)
+            {
+                Vector2 tempPosition = Position;
+                tempPosition.Y = 300;
+                Position = tempPosition;
+                isJumping = false; // Speler staat weer op de grond
+            }
+
+            if (isInvincible)
+            {
+                invincibleTimer -= gameTime.ElapsedGameTime.TotalSeconds;
+                if(invincibleTimer <= 0)
+                {
+                    isInvincible = false;
+                }
+            }
         }
+
+        public void TakeDamage()
+        {
+            if (!isInvincible)
+            {
+                lives--;
+                isInvincible = true;
+                invincibleTimer = 2.0;
+
+                if (lives <= 0)
+                {
+                    Game1.GameOver = true;
+                }
+            }
+        }
+
+
 
         public bool IsjumpingOn(Enemy enemy)
         {

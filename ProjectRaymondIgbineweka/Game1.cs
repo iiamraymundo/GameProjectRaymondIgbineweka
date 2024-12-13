@@ -8,9 +8,11 @@ namespace ProjectRaymondIgbineweka
 {
     public class Game1 : Game
     {
-        //deze 2 zeker behouden
+        //deze 3 zeker behouden
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch; 
+        private SpriteBatch _spriteBatch;
+        public static bool GameOver = false;
+
 
         private enum GameState { StartScreen, Playing, GameOver}
         private GameState currentGameState = GameState.StartScreen;
