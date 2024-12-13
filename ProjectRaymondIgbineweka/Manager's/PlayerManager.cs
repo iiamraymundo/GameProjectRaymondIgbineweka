@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace ProjectRaymondIgbineweka.Manager_s
 {
@@ -14,6 +15,8 @@ namespace ProjectRaymondIgbineweka.Manager_s
         private Texture2D playerTexture;
         private int lives;
         private int score;
+
+        private Vector2 velocity;
 
         public PlayerManager(Texture2D texture)
         {
@@ -25,7 +28,20 @@ namespace ProjectRaymondIgbineweka.Manager_s
 
         public void Update(GameTime gameTime)
         {
+            KeyboardState keyboardState = Keyboard.GetState();
 
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                velocity.X = -5f;
+            }
+            else if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                velocity.X = 5f;
+            }
+            else
+            {
+                velocity.X = 0; // Stop met bewegen
+            }
         }
 
         public bool IsjumpingOn(Enemy enemy)
