@@ -10,6 +10,7 @@ namespace ProjectRaymondIgbineweka
         public Vector2 Position { get; set; }
         public float Speed { get; set; }
 
+
         
         public Enemy(Texture2D texture, Vector2 startPosition, float speed)
         {

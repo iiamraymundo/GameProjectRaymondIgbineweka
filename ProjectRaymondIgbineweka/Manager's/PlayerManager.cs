@@ -102,24 +102,23 @@ namespace ProjectRaymondIgbineweka.Manager_s
         }
 
 
-
+        //Deze methode ga ik niet nodig hebben maar kan handig zijn voor later
         public bool IsjumpingOn(Enemy enemy)
         {
             return Position.Y + playerTexture.Height < enemy.Position.Y + 10;
         }
 
-        public void TakeDamage()
-        {
-            lives--;
-            if (lives <= 0)
-            {
-                // Speler is dood
-            }
-        }
+        
 
         public void AddScore(int amount)
         {
             score += amount;
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            Color tint = isInvincible ? Color.Red * 0.5f : Color.White; // Laat de speler hier flikkeren
+            spriteBatch.Draw(playerTexture, Position, tint);
         }
     }
 }
