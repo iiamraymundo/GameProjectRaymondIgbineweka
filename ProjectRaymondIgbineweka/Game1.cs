@@ -12,35 +12,25 @@ namespace ProjectRaymondIgbineweka
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         public static bool GameOver = false;
-
-
-        private enum GameState { StartScreen, Playing, GameOver}
+        
         private GameState currentGameState = GameState.StartScreen;
 
-        private SpriteFont startFont;
-
-        private Texture2D playerTexture; // Sprite van speler
-        private Vector2 playerPosition; // Positie van speler, doe dit straks weg
-        private float playerSpeed = 200f; // Snelheid van speler
-
-        private Enemy enemy; //1 vijand, Ik ga hiervan een lijst maken wanneer ik meerdere vijanden heb
-
-        private EnemyTypeTwo enemyTypeTwo;
-        private List<Coin> coins;
-        private int score = 0;
-        private int playerLives = 3;
-        private bool isPlayerInvincible = false;
-        private float invincibilityTimer = 0f;
-        private float invincibilityDuration = 2f; // Onschendbaarheid duurt 2 seconden
-
-        private List<Enemy> enemies; // Bevat alle vijanden in het spel
+        private SpriteFont startFont;       
+        
 
         private FinalBoss finalBoss;
 
-        //nieuwe instanties
+        // Managers        
         private GameStateManager gameStateManager;
         private PlayerManager playerManager;
         private LevelManager levelManager;
+        private UIManager uiManager;
+
+        // Game assets
+        private Texture2D playerTexture, enemyTexture;
+        private List<Enemy> enemies; // Bevat alle vijanden in het spel
+        private List<Coin> coins;
+
 
 
 
@@ -58,28 +48,23 @@ namespace ProjectRaymondIgbineweka
             _graphics.ApplyChanges();
 
             base.Initialize();
+
+            gameStateManager = new GameStateManager();
+            playerManager = new PlayerManager(playerTexture);
+            enemies = new List<Enemy>();
+            coins = new List<Coin>();
+            
+
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            startFont = Content.Load<SpriteFont>("StartFont"); // Ik maak hier een SpriteFont nadat ik het startscherm heb ingeladen
+            startFont = Content.Load<SpriteFont>("StartFont"); // Ik maak hier een SpriteFont nadat ik het startscherm heb ingeladen            
+            playerTexture = Content.Load<Texture2D>("player");            
+            enemyTexture = Content.Load<Texture2D>("enemy");
 
-            //Speler aanmaken als een gekleurde rechthoek
-            playerTexture = new Texture2D(GraphicsDevice, 50, 50);
-            Color[] data = new Color[50 * 50];
-            for (int i = 0; i < data.Length; i++) 
-            {
-                data[i] = Color.Red;
-            }
-            playerTexture.SetData(data);
-
-            // Startpositie van de speler
-            playerPosition = new Vector2(375, 500); // Midden-onderaan het scherm
-            
-            // Vijand aanmaken als een gekleurde rechthoek
-            Texture2D enemyTexture = new Texture2D(GraphicsDevice,50,50);
             Color[] enemyData = new Color[50 * 50];
             for (int i = 0; i < enemyData.Length; i++)
             {

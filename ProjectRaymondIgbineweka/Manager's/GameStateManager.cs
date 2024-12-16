@@ -11,9 +11,11 @@ namespace ProjectRaymondIgbineweka.Manager_s
 {
     internal class GameStateManager
     {
-        private GameState currentGameState;
+        private GameState currentGameState { get; set; } = GameState.Playing;
         private Vector2 playerPosition;
         private KeyboardState state;
+
+
 
         public GameStateManager()
         {
