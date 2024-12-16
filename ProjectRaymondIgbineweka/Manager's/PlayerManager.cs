@@ -12,9 +12,9 @@ namespace ProjectRaymondIgbineweka.Manager_s
     internal class PlayerManager
     {
         public Vector2 Position { get; private set; }
-        private Texture2D playerTexture;
+        private Texture2D playerTexture { get; set; }
         private int lives;
-        private int score;
+        public int score { get; set; };
 
         private Vector2 velocity;
         private bool isJumping;
@@ -115,10 +115,25 @@ namespace ProjectRaymondIgbineweka.Manager_s
             score += amount;
         }
 
+
         public void Draw(SpriteBatch spriteBatch)
         {
             Color tint = isInvincible ? Color.Red * 0.5f : Color.White; // Laat de speler hier flikkeren
             spriteBatch.Draw(playerTexture, Position, tint);
+        }
+
+        public Rectangle BoundingBox
+        {
+            get
+            {
+                if (Texture == null)
+                {
+                    throw new InvalidOperationException("Texture is null. Zorg ervoor dat Texture is toegewezen.");
+                }
+
+                return new Rectangle((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height);
+
+            }
         }
     }
 }

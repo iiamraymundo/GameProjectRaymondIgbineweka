@@ -34,5 +34,14 @@ namespace ProjectRaymondIgbineweka
         {
             spriteBatch.Draw(Texture, Position, Color.White);
         }
+
+        /* 
+         // enemies aanmaken
+            enemies = new List<Enemy>
+            {
+                new Enemy(enemyTexture,new Vector2(300,200),90f),
+                new Enemy(enemyTexture,new Vector2(500,150),90f)
+            };
+         */
     }
 }

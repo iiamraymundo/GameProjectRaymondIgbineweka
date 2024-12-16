@@ -13,25 +13,27 @@ namespace ProjectRaymondIgbineweka
         private SpriteBatch _spriteBatch;
         public static bool GameOver = false;
         
-        private GameState currentGameState = GameState.StartScreen;
-
-        private SpriteFont startFont;       
-        
-
-        private FinalBoss finalBoss;
+        // Game state
+        private GameState currentGameState = GameState.StartScreen;       
 
         // Managers        
         private GameStateManager gameStateManager;
-        private PlayerManager playerManager;
+        private PlayerManager player;
         private LevelManager levelManager;
         private UIManager uiManager;
 
-        // Game assets
-        private Texture2D playerTexture, enemyTexture;
+        private CollisionManager collisionManager;
+
+        // Game assets/objects
+        private SpriteFont startFont;
+        private Texture2D playerTexture, enemyTexture, coinTexture, backgroundTexture;
         private List<Enemy> enemies; // Bevat alle vijanden in het spel
         private List<Coin> coins;
+        private FinalBoss finalBoss;
 
-
+        // Background
+        private Vector2 backgroundPosition1, backgroundPosition2;
+        private float backgroundSpeed = 3f;
 
 
         public Game1()
@@ -50,7 +52,7 @@ namespace ProjectRaymondIgbineweka
             base.Initialize();
 
             gameStateManager = new GameStateManager();
-            playerManager = new PlayerManager(playerTexture);
+            player = new PlayerManager(playerTexture);
             enemies = new List<Enemy>();
             coins = new List<Coin>();
             
@@ -65,35 +67,20 @@ namespace ProjectRaymondIgbineweka
             playerTexture = Content.Load<Texture2D>("player");            
             enemyTexture = Content.Load<Texture2D>("enemy");
 
-            Color[] enemyData = new Color[50 * 50];
-            for (int i = 0; i < enemyData.Length; i++)
-            {
-                enemyData[i] = Color.Green;                
-            }
-            enemyTexture.SetData(enemyData);
+            
 
-            // Geef de tekstuur door aan de vijand
-            enemy = new Enemy(enemyTexture, new Vector2(375, 50), 100f);
+            // Laad enemies en coins
+            LoadInitialEnemiesAndCoins();
 
-
-            enemyTypeTwo = new EnemyTypeTwo(enemyTexture, new Vector2(700, 300));
-
-            // Coins aanmaken
-            coins = new List<Coin>();
-            for (int i = 0; i < 5; i++) // 5 coins
-            {
-                coins.Add(new Coin(playerTexture, new Vector2(100 * i + 50, 100))); // Pas locatie aan
-            }
-
-            // enemies aanmaken
-            enemies = new List<Enemy>
-            {
-                new Enemy(enemyTexture,new Vector2(300,200),90f),
-                new Enemy(enemyTexture,new Vector2(500,150),90f)
-            };
-
+            // Final boss setup
             finalBoss = new FinalBoss(enemyTexture, new Vector2(600, 200));
 
+        }
+
+        private void LoadInitialEnemiesAndCoins()
+        {
+            enemies.Add(new Enemy(enemyTexture, new Vector2(500, 300), 20f));
+            coins.Add(new Coin(coinTexture, new Vector2(400, 350)));
         }
 
         protected override void Update(GameTime gameTime)

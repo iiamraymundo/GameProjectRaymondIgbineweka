@@ -29,5 +29,14 @@ namespace ProjectRaymondIgbineweka
             }
         }
 
+       /* // Coins aanmaken
+        coins = new List<Coin>();
+            for (int i = 0; i< 5; i++) // 5 coins
+            {
+                coins.Add(new Coin(playerTexture, new Vector2(100 * i + 50, 100))); // Pas locatie aan
+            }
+
+        */
+
     }
 }
